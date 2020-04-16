@@ -17,17 +17,30 @@
  */
 package org.superbiz.struts;
 
+import com.opensymphony.xwork2.ActionSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import java.util.List;
 import java.util.Properties;
+@Component
+public class ListAllUsers extends ActionSupport {
 
-public class ListAllUsers {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    UserService service;
     private int id;
     private String errorMessage;
     private List<User> users;
-
+    public ListAllUsers (UserService service) {
+        this.service = service;
+    }
     public List<User> getUsers() {
         return users;
     }
@@ -55,12 +68,7 @@ public class ListAllUsers {
     public String execute() {
 
         try {
-            UserService service = null;
-            Properties props = new Properties();
-            props.put(Context.INITIAL_CONTEXT_FACTORY,
-                "org.apache.openejb.core.LocalInitialContextFactory");
-            Context ctx = new InitialContext(props);
-            service = (UserService) ctx.lookup("UserServiceImplLocal");
+logger.info("LIST$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4");
             this.users = service.findAll();
         } catch (Exception e) {
             this.errorMessage = e.getMessage();
